@@ -1,0 +1,202 @@
+body{
+	background-color: hsl(171deg, 100%, 41%);
+	font-family: Roboto,Sans-serif;
+}
+
+.form {
+    width: 700px;
+    margin: auto;
+}
+
+.required{
+	font-size: 13px;
+	color: red;
+	text-align: left;
+	margin-top: -15px;
+	padding-left: 2px;
+}
+
+.name-div, .position-div, .present-div, .eval-div{
+	height: 150px;
+	width: 650px;
+	background-color: #FDFEFE;
+	margin-bottom: 15px;
+	border-radius: 8px;
+}
+
+.name{
+	padding-top: 20px;
+	padding-left: 25px;
+	padding-bottom: 25px;
+	font-size: 15px;
+}
+.input-div{
+	padding-top: 25px;
+	padding-left: 25px;
+}
+.input-div input{
+	width: 300px;
+	border: 0;
+	outline: 0;
+	border-bottom: 1.5px solid #DCD7D7;
+	font-size: 15px;
+}
+
+.input-div{
+	padding-top: 25px;
+	padding-left: 25px;
+}
+.input-div input{
+	width: 300px;
+	border: 0;
+	outline: 0;
+	border-bottom: 1.5px solid #DCD7D7;
+	font-size: 15px;
+}
+
+.present{
+	padding-top: 20px;
+	padding-left: 25px;
+	padding-bottom: 25px;
+	font-size: 15px;
+}
+.input-div{
+	padding-top: 25px;
+	padding-left: 25px;
+}
+.input-div input{
+	width: 300px;
+	border: 0;
+	outline: 0;
+	border-bottom: 1.5px solid #DCD7D7;
+	font-size: 15px;
+}
+
+.eval{
+	padding-top: 20px;
+	padding-left: 25px;
+	padding-bottom: 25px;
+	font-size: 15px;
+}
+
+.input-div{
+	padding-top: 0px;
+	padding-left: 25px;
+}
+
+.input-div textarea {
+    width: 600px;
+    height: 60px;
+    border: 1px solid black;
+    font-size: 15px;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    resize: none;
+}
+
+.title-div{
+	height: 100px;
+	width: 750px;
+	background-color: rgb(255, 255, 255);
+	padding-left: 25px;
+	border-top: 20px solid hsl(170, 100%, 27%);
+	text-align: left;
+	font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.rate{
+	height: 190px;
+	width: 750px;
+    font-size: 15px;
+    background-color: rgb(255, 255, 255);
+	padding-top: 20px;
+	padding-left: 25px;
+	align-items: center;
+	border-bottom: 2px solid #888;
+	box-shadow: black ;
+	font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.sentiment1{
+	height: 200px;
+	width: 750px;
+	background-color: rgb(255, 255, 255);
+	padding-right: 25px;
+	border-bottom: 2px solid #888;
+	font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.sentiment2{
+	height: 200px;
+	width: 750px;
+	background-color: rgb(255, 255, 255);
+	padding-right: 25px;
+	border-bottom: 20px solid  hsl(170, 100%, 27%);
+	font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.model-name{
+	padding-top: 20px;
+	padding-bottom: 25px;
+	font-size: 20px;
+	text-align: center;
+}
+
+.model-container {
+	display: flex;
+	justify-content: center;
+}
+
+.m-header {
+	font-size: 50px;
+	font-weight: bold;
+	margin-top: 170px;
+	text-align: center;
+	font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.button{
+	height: 36px;
+	width: 775px;
+	background-color: hsl(171, 97%, 15%);
+	border-radius: 5px;
+	font-size: 14px;
+	letter-spacing: .5px;
+	font-weight: 540;
+	border: none;
+	padding: 10px;
+	position: relative;
+	color: hsl(171, 38%, 80%);
+	cursor: pointer;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.button:hover {
+	background-color: hsl(169, 89%, 29%);
+}
+
+.button:active {
+	background-color:  hsl(169, 94%, 25%);
+	transform: translateY(4px);
+}
+
+.last-div h2{
+	text-align: center;
+	padding-top: 50px;
+	color: #a2a4a6;
+	font-weight: 200;
+}
+
+.term{
+	font-size: 12px;
+	padding-left: 65px;
+	padding-top: 5px;
+	position: absolute;
+}
+
+.never{
+	padding-left: 15px;
+	font-size: 12px;
+	padding-top: 70px;
+	font-weight: 400;
+}
