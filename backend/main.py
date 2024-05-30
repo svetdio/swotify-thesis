@@ -1,8 +1,11 @@
 import pickle
 import pandas as pd
-from fastapi import FastAPI
+from pandasql import sqldf
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Union
+import json
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, OrdinalEncoder
@@ -20,8 +23,10 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
 nltk.download('vader_lexicon')
 
+# Instatiate the FastAPI class
 app = FastAPI()
 
+# Enable CORS
 origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
@@ -31,6 +36,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Set the input structure for the predict method
 class PredictionInput(BaseModel):
     responsibility_rating: int
     team_communication_rating: int
@@ -47,11 +53,16 @@ class PredictionInput(BaseModel):
     comment_feedback: str
     event_contribution: str
 
+# Fetch and load the models
 knn_model = pickle.load(open('models/init_knn_model.pkl', 'rb'))
 svc_model = pickle.load(open('models/tuned_svc_model.pkl', 'rb'))
 xgb_model = pickle.load(open('models/tuned_xgb_model.pkl', 'rb'))
 
 sia = SentimentIntensityAnalyzer()
+
+# Set pandasql
+pysqldf = lambda q: sqldf(q, globals())
+swotify = pd.read_csv('data/2023_LocalCAF_Swotify.csv', encoding='utf-8')
 
 @app.post("/predict")
 async def predict(ratings: PredictionInput):
@@ -92,9 +103,67 @@ async def predict(ratings: PredictionInput):
         "svc_prediction": int(svc_prediction),
         "xgb_prediction": int(xgb_prediction),
         "sentiment_class": sentiment_cls,
-        "sentiment_score": final_score
+        "sentiment_score": final_score,
+        "cf_scores": cf_scores,
+        "ec_scores": ec_scores,
     }
+
+@app.get('/get_officers_names')
+async def get_officers_names(keyword: Union[str, None] = None):
+
+    q = """
+        SELECT DISTINCT evaluatee AS officers FROM swotify 
+    """
+
+    if keyword is not None:
+        q = f"""
+            SELECT DISTINCT evaluatee AS officers FROM swotify WHERE evaluatee LIKE '%{keyword}%'
+        """
+    return pysqldf(q).to_dict()
+
+    
+@app.get('/get_sentiment_values/{evaluatee}')
+async def get_dashboard_values(evaluatee: Union[str, None] = None):
+    if evaluatee is None:
+        return {'values' : []}
+    else:
+        q = f"""
+            SELECT 
+                COUNT(*) total_eval_received,
+                COUNT(IIF(sentiment = 'Positive', 1, NULL)) positive_sentiment,
+                COUNT(IIF(sentiment = 'Neutral', 1, NULL)) neutral_sentiment,
+                COUNT(IIF(sentiment = 'Negative', 1, NULL)) negative_sentiment
+            FROM swotify
+            WHERE evaluatee = '{evaluatee}'
+        """
+        return pysqldf(q).to_dict(orient="records")[0]
+    
+
+@app.get('/get_performance_rating/{evaluatee}')
+async def get_performance_rating(evaluatee: Union[str, None] = None):
+    if evaluatee is None:
+        return {'values' : []}
+    else:
+        q = f"""
+            SELECT 
+                AVG(responsibility_rating) responsibility_rating,
+                AVG(team_communication_rating) team_communication_rating,
+                AVG(task_delegation_rating) task_delegation_rating,
+                AVG(calmness_rating) calmness_rating,
+                AVG(adaptability_rating) adaptability_rating,
+                AVG(attitude_rating) attitude_rating,
+                AVG(comm_collab_rating) comm_collab_rating,
+                AVG(external_resp_rating) external_resp_rating,
+                AVG(time_management_rating) time_management_rating,
+                AVG(collab_rating) collab_rating,
+                AVG(flexible_rating) flexible_rating,
+                AVG(accountability_rating) accountability_rating
+            FROM swotify
+            WHERE evaluatee = '{evaluatee}'
+        """
+        return pysqldf(q).to_dict(orient="records")[0]
+
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", reload=True, port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8000)
