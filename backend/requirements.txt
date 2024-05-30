@@ -3,3 +3,4 @@ scikit-learn==1.2.2
 xgboost==2.0.3
 fastapi
 nltk
+pandasql==0.7.3

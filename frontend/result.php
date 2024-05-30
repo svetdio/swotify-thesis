@@ -1,3 +1,9 @@
+<?php
+// if (!isset($_POST['submit'])) {
+//     header('Location: index.php');
+// }
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -8,6 +14,7 @@
     <link rel="icon" href="assets/sentiment-analysis.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/versions/bulma-no-dark-mode.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
 </head>
 
 <body>
@@ -15,7 +22,7 @@
         <section class="hero is-primary">
             <div class="hero-body is-flex is-justify-content-space-between">
                 <p class="title">Model Validation Results</p>
-                <a href="testform.php" onclick="history.go(-1);">
+                <a href="index.php">
                     <input class="button" type="submit" name="Submit" value="Back" style="font-weight: bold;">
                 </a>
             </div>
@@ -205,7 +212,7 @@
 
                 document.getElementById('xgb').textContent = xgb_pred;
                 document.getElementById('xgb').classList.add(xgb_class);
-                
+
                 document.getElementById('actual_pred').textContent = data.sentiment_class
                 document.getElementById('actual_pred').classList.add(actual_sent);
 
