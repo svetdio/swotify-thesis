@@ -161,8 +161,42 @@ async def get_performance_rating(evaluatee: Union[str, None] = None):
             FROM swotify
             WHERE evaluatee = '{evaluatee}'
         """
-        return pysqldf(q).to_dict(orient="records")[0]
 
+        q2 = f"""
+            SELECT 
+                AVG(responsibility_rating) responsibility_rating,
+                AVG(team_communication_rating) team_communication_rating,
+                AVG(task_delegation_rating) task_delegation_rating,
+                AVG(calmness_rating) calmness_rating,
+                AVG(adaptability_rating) adaptability_rating,
+                AVG(attitude_rating) attitude_rating,
+                AVG(comm_collab_rating) comm_collab_rating,
+                AVG(external_resp_rating) external_resp_rating,
+                AVG(time_management_rating) time_management_rating,
+                AVG(collab_rating) collab_rating,
+                AVG(flexible_rating) flexible_rating,
+                AVG(accountability_rating) accountability_rating
+            FROM swotify
+        """
+        return {
+            "self" : pysqldf(q).to_dict(orient="records")[0],
+            "global": pysqldf(q2).to_dict(orient="records")[0],
+        }
+
+
+@app.get('/get_comments/{evaluatee}')
+async def get_comments(evaluatee: Union[str, None] = None):
+    q = f"""
+            SELECT 
+                evaluator,
+                comment_feedback,
+                event_contribution,
+                cf_compound,
+                ec_compound
+            FROM swotify
+            WHERE evaluatee = '{evaluatee}'
+        """
+    return pysqldf(q).to_dict(orient="records")
 
 if __name__ == "__main__":
     import uvicorn

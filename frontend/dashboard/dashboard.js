@@ -34,6 +34,15 @@ $(function () {
                 .then(response => response.json())
                 .then(data => {
                     performanceRatings(data)
+
+                    return fetch('http://localhost:8000/get_comments/' + evaluatee)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    renderComments(data)
+
+                    $('#loading-screen').addClass('is-hidden');
+                    $('#results-pane').removeClass('is-hidden');
                 });
         }
 
@@ -80,7 +89,6 @@ $(function () {
                 plugins: [ChartDataLabels],
                 options: {
                     responsive: true,
-                    // aspectRatio: 1,
                     plugins: {
                         datalabels: {
                             formatter: (value, ctx) => {
@@ -88,6 +96,7 @@ $(function () {
                                 const datapoints = ctx.chart.data.datasets[0].data
                                 const total = datapoints.reduce((total, datapoint) => total + (typeof datapoint == 'undefined' ? 0 : datapoint), 0)
                                 const percentage = val / total * 100
+                                // debugger;
                                 return (percentage == 0) ? '' : percentage.toFixed(2) + "%";
                             },
                             color: 'black',
@@ -118,34 +127,35 @@ $(function () {
             'Accountability'
         ]
 
-        const perf_ratings = [
-            data.responsibility_rating,
-            data.team_communication_rating,
-            data.task_delegation_rating,
-            data.calmness_rating,
-            data.adaptability_rating,
-            data.attitude_rating,
-            data.comm_collab_rating,
-            data.external_resp_rating,
-            data.time_management_rating,
-            data.collab_rating,
-            data.flexible_rating,
-            data.accountability_rating,
+        const user_perf_ratings = [
+            data.self.responsibility_rating,
+            data.self.team_communication_rating,
+            data.self.task_delegation_rating,
+            data.self.calmness_rating,
+            data.self.adaptability_rating,
+            data.self.attitude_rating,
+            data.self.comm_collab_rating,
+            data.self.external_resp_rating,
+            data.self.time_management_rating,
+            data.self.collab_rating,
+            data.self.flexible_rating,
+            data.self.accountability_rating,
         ]
 
-        const colors = []
-        const bestPerf = getMax(data);
-        const worstPerf = getMin(data);
-
-        for (const [rating, val] of Object.entries(data)) {
-            if (bestPerf.includes(rating)) {
-                colors.push('hsl(141, 71%, 48%)')
-            } else if (worstPerf.includes(rating)) {
-                colors.push('hsl(348, 100%, 61%)')
-            } else {
-                colors.push('hsl(204, 86%, 53%)')
-            }
-        }
+        const global_perf_ratings = [
+            data.global.responsibility_rating,
+            data.global.team_communication_rating,
+            data.global.task_delegation_rating,
+            data.global.calmness_rating,
+            data.global.adaptability_rating,
+            data.global.attitude_rating,
+            data.global.comm_collab_rating,
+            data.global.external_resp_rating,
+            data.global.time_management_rating,
+            data.global.collab_rating,
+            data.global.flexible_rating,
+            data.global.accountability_rating,
+        ]
 
         return new Chart(
             document.getElementById('performance_ratings'),
@@ -154,10 +164,18 @@ $(function () {
                 data: {
                     labels: labels,
                     datasets: [{
-                        data: perf_ratings,
-                        backgroundColor: colors,
+                        label: 'Personal Performance',
+                        data: user_perf_ratings,
+                        backgroundColor: 'hsl(204, 86%, 53%)',
                         hoverOffset: 4
-                    }]
+                    },
+                    {
+                        label: 'Overall Performance',
+                        data: global_perf_ratings,
+                        backgroundColor: 'hsl(0, 0%, 86%)',
+                        hoverOffset: 4
+                    }
+                    ]
                 },
                 options: {
                     indexAxis: 'y',
@@ -165,10 +183,35 @@ $(function () {
                     aspectRatio: 3,
                     plugins: {
                         legend: {
-                            display: false
-                        },
-                    }
+                            display: true,
+                        }
+                    },
                 }
             });
+    }
+
+    const renderComments = function (data) {
+        if ($.fn.DataTable.isDataTable('#sentiment_comments')) {
+            $('#sentiment_comments').DataTable().destroy();
+        }
+
+        let tbl_content = "";
+
+        for (const d of data) {
+            tbl_content += "<tr>";
+            tbl_content += "<td>" + d.evaluator + "</td>";
+            tbl_content += "<td>" + d.event_contribution + "</td>";
+            tbl_content += "<td>" + d.comment_feedback + "</td>";
+            tbl_content += "</tr>";
+        }
+        $('#sentiment_comments tbody').html(tbl_content);
+
+        $('#sentiment_comments').DataTable({
+            responsive: true,
+            lengthMenu: [
+                [5, 10, -1],
+                [5, 10, 'All']
+            ]
+        });
     }
 });
