@@ -1,7 +1,19 @@
 <?php
-// if (!isset($_POST['submit'])) {
-//     header('Location: index.php');
-// }
+$positive_rate = array(
+    '5' => 'Strongly Agree',
+    '4' => 'Agree',
+    '3' => 'Neutral',
+    '2' => 'Disagree',
+    '1' => 'Strongly Disagree'
+    );
+
+$negative_rate = array(
+    '1' => 'Strongly Agree',
+    '2' => 'Agree',
+    '3' => 'Neutral',
+    '4' => 'Disagree',
+    '5' => 'Strongly Disagree'
+    );
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +34,7 @@
         <section class="hero is-primary">
             <div class="hero-body is-flex is-justify-content-space-between">
                 <p class="title">Model Validation Results</p>
-                <a href="index.php">
+                <a href="form.php">
                     <input class="button" type="submit" name="Submit" value="Back" style="font-weight: bold;">
                 </a>
             </div>
@@ -53,7 +65,7 @@
         </div>
 
 
-        <section class="hero py-3 px-4 has-background-primary-light has-radius-normal">
+        <section class="hero py-3 px-4 has-background-primary-light has-radius-normal is-hidden">
             <div class="hero-body">
                 <div class="fixed-grid has-3-cols">
                     <div class="grid">
@@ -77,51 +89,51 @@
                     <tbody>
                         <tr>
                             <td>He/She was well-prepared for his/her responsibilities during the Local CAF 2024?</td>
-                            <td><?php echo $_POST['responsibility_rating'] ?></td>
+                            <td><?php echo $positive_rate[$_POST['responsibility_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>He/She effectively communicated with his/her team members before and during the Local CAF 2024?</td>
-                            <td><?php echo $_POST['team_communication_rating'] ?></td>
+                            <td><?php echo $positive_rate[$_POST['team_communication_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>He/She was able to delegate tasks effectively and ensure he/she were completed on time?</td>
-                            <td><?php echo $_POST['task_delegation_rating'] ?></td>
+                            <td><?php echo $positive_rate[$_POST['task_delegation_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>He/She remained calm and collected under pressure during the event?</td>
-                            <td><?php echo $_POST['calmness_rating'] ?></td>
+                            <td><?php echo $positive_rate[$_POST['calmness_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>He/She was able to adapt to unexpected challenges and changes before or during the Local CAF 2024?</td>
-                            <td><?php echo $_POST['adaptability_rating'] ?></td>
+                            <td><?php echo $positive_rate[$_POST['adaptability_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>He/She consistently displayed a positive and enthusiastic attitude throughout the Local CAF 2024?</td>
-                            <td><?php echo $_POST['attitude_rating'] ?></td>
+                            <td><?php echo $positive_rate[$_POST['attitude_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>Do you think he/she face any difficulties with communication or collaboration during the event?</td>
-                            <td><?php echo $_POST['comm_collab_rating'] ?></td>
+                            <td><?php echo $negative_rate[$_POST['comm_collab_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>In any external factors that threatened the success of the event, did he/she respond relatively?</td>
-                            <td><?php echo $_POST['external_resp_rating'] ?></td>
+                            <td><?php echo $positive_rate[$_POST['external_resp_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>He/She did not effectively manage his/her time during the event?</td>
-                            <td><?php echo $_POST['time_management_rating'] ?></td>
+                            <td><?php echo $negative_rate[$_POST['time_management_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>He/She did not collaborate effectively with other CSG officers or committees?</td>
-                            <td><?php echo $_POST['collab_rating'] ?></td>
+                            <td><?php echo $negative_rate[$_POST['collab_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>He/She was not flexible in his/her approach to problem-solving during the Local CAF 2024?</td>
-                            <td><?php echo $_POST['flexible_rating'] ?></td>
+                            <td><?php echo $negative_rate[$_POST['flexible_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>He/She did not take responsibility for his/her mistakes or the mistakes of his/her team?</td>
-                            <td><?php echo $_POST['accountability_rating'] ?></td>
+                            <td><?php echo $negative_rate[$_POST['accountability_rating']] ?></td>
                         </tr>
                         <tr>
                             <td>What do you think is his/her greatest contribution and what opportunity did he/she unlock during Local CAF 2024 event?</td>
@@ -163,9 +175,9 @@
             })
             .then(response => response.json())
             .then(data => {
-                let knn_pred = 'Positive';
-                let svc_pred = 'Positive';
-                let xgb_pred = 'Positive';
+                let knn_pred = '<span style="font-size: 4em;">😊</span><br>Positive';
+                let svc_pred = '<span style="font-size: 4em;">😊</span><br>Positive';
+                let xgb_pred = '<span style="font-size: 4em;">😊</span><br>Positive';
 
                 let knn_class = "has-text-success";
                 let svc_class = "has-text-success";
@@ -174,26 +186,26 @@
                 let actual_sent = "has-text-success"
 
                 if (data.knn_prediction == 0) {
-                    knn_pred = 'Neutral'
+                    knn_pred = '<span style="font-size: 4em;">😐</span><br>Neutral'
                     knn_class = 'has-text-link-light'
                 } else if (data.knn_prediction > 1) {
-                    knn_pred = 'Negative'
+                    knn_pred = '<span style="font-size: 4em;">😡</span><br>Negative'
                     knn_class = 'has-text-danger'
                 }
 
                 if (data.svc_prediction == 0) {
-                    svc_pred = 'Neutral'
+                    svc_pred = '<span style="font-size: 4em;">😐</span><br>Neutral'
                     svc_class = 'has-text-link-light'
                 } else if (data.svc_prediction > 1) {
-                    svc_pred = 'Negative'
+                    svc_pred = '<span style="font-size: 4em;">😡</span><br>Negative'
                     svc_class = 'has-text-danger'
                 }
 
                 if (data.xgb_prediction == 0) {
-                    xgb_pred = 'Neutral'
+                    xgb_pred = '<span style="font-size: 4em;">😐</span><br>Neutral'
                     xgb_class = 'has-text-link-light'
                 } else if (data.xgb_prediction > 1) {
-                    xgb_pred = 'Negative'
+                    xgb_pred = '<span style="font-size: 4em;">😡</span><br>Negative'
                     xgb_class = 'has-text-danger'
                 }
 
@@ -204,13 +216,13 @@
                     actual_sent = 'has-text-danger'
                 }
 
-                document.getElementById('knn').textContent = knn_pred;
+                document.getElementById('knn').innerHTML = knn_pred;
                 document.getElementById('knn').classList.add(knn_class);
 
-                document.getElementById('svc').textContent = svc_pred;
+                document.getElementById('svc').innerHTML = svc_pred;
                 document.getElementById('svc').classList.add(svc_class);
 
-                document.getElementById('xgb').textContent = xgb_pred;
+                document.getElementById('xgb').innerHTML = xgb_pred;
                 document.getElementById('xgb').classList.add(xgb_class);
 
                 document.getElementById('actual_pred').textContent = data.sentiment_class

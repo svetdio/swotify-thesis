@@ -21,14 +21,18 @@ $(function () {
         if (evaluatee == "") {
             alert('Please put name of evaluatee')
         } else {
+            $('#loading-screen').addClass('is-hidden');
+            $('#results-pane').removeClass('is-hidden');
+
+
             fetch('http://localhost:8000/get_sentiment_values/' + evaluatee)
                 .then(response => response.json())
                 .then(data => {
                     $.each($('p.main_score'), function (i, d) {
                         $(d).html(data[$(d).attr('id')]);
                     })
+                    sentimentDistribution(data.positive_sentiment, data.neutral_sentiment, data.negative_sentiment);
 
-                    sentimentDistribution(data.positive_sentiment, data.neutral_sentiment, data.negative_statement);
                     return fetch('http://localhost:8000/get_performance_rating/' + evaluatee)
                 })
                 .then(response => response.json())
@@ -40,9 +44,6 @@ $(function () {
                 .then(response => response.json())
                 .then(data => {
                     renderComments(data)
-
-                    $('#loading-screen').addClass('is-hidden');
-                    $('#results-pane').removeClass('is-hidden');
                 });
         }
 

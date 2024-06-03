@@ -1,5 +1,5 @@
 body{
-	background-color: hsl(171deg, 100%, 41%);
+	/* background-color: hsl(171deg, 100%, 41%); */
 	font-family: Roboto,Sans-serif;
 }
 
@@ -152,32 +152,6 @@ body{
 	margin-top: 170px;
 	text-align: center;
 	font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-}
-
-.button{
-	height: 36px;
-	width: 775px;
-	background-color: hsl(171, 97%, 15%);
-	border-radius: 5px;
-	font-size: 14px;
-	letter-spacing: .5px;
-	font-weight: 540;
-	border: none;
-	padding: 10px;
-	position: relative;
-	color: hsl(171, 38%, 80%);
-	cursor: pointer;
-	margin-top: 10px;
-	margin-bottom: 20px;
-}
-
-.button:hover {
-	background-color: hsl(169, 89%, 29%);
-}
-
-.button:active {
-	background-color:  hsl(169, 94%, 25%);
-	transform: translateY(4px);
 }
 
 .last-div h2{
