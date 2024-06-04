@@ -15,43 +15,41 @@
 </head>
 
 <body>
+    <nav class="navbar is-link" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="index.php">
+                <img src="assets/sentiment-analysis.png" alt="Page logo">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a href="index.php" class="navbar-item">Home</a>
+                <a href="dashboard.php" class="navbar-item is-selected">Analysis Dashboard</a>
+                <a href="form.php" class="navbar-item">Model Validation Form</a>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <a href="https://colab.research.google.com/drive/1nGLgxrAnrBgf3PYlc9shmnaHIEH_ywDi#scrollTo=zUSzysEZHOMy" class="navbar-item">Training Notebook</a>
+            </div>
+        </div>
+    </nav>
 
     <section class="hero is-small is-primary">
-        <div class="hero-head">
-            <nav class="navbar" role="navigation" aria-label="main navigation">
-                <div class="navbar-brand">
-                    <a class="navbar-item" href="index.php">
-                        <img src="assets/sentiment-analysis.png" alt="Page logo">
-                    </a>
-
-                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                </div>
-
-                <div id="navbarBasicExample" class="navbar-menu">
-                    <div class="navbar-start">
-                        <a href="index.php" class="navbar-item">Home</a>
-                        <a href="dashboard.php" class="navbar-item is-selected">Analysis Dashboard</a>
-                        <a href="form.php" class="navbar-item">Model Validation Form</a>
-                    </div>
-                </div>
-
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <a href="https://colab.research.google.com/drive/1nGLgxrAnrBgf3PYlc9shmnaHIEH_ywDi#scrollTo=zUSzysEZHOMy" class="navbar-item">Training Notebook</a>
-                    </div>
-                </div>
-        </div>
-        </nav>
-        </div>
         <div class="hero-body">
             <p class="subtitle has-text-weight-semibold">Analysis Dashboard</p>
         </div>
     </section>
+
     <section class="section p-2">
         <div class="container is-fluid">
             <div class="columns">
@@ -153,10 +151,10 @@
                         <div class="column">
                             <div class="box m-1">
                                 <p class="title is-5">All Feedback</p>
-                                <table id="sentiment_comments" class="table is-hoverable is-narrow" style="width: 100%">
+                                <table id="sentiment_comments" class="table is-hoverable is-striped is-narrow" style="width: 100%">
                                     <thead>
                                         <tr>
-                                            <th>Evaluator</th>
+                                            <!-- <th>Evaluator</th> -->
                                             <th>Event Contribution</th>
                                             <th>Comment and Feedback</th>
                                         </tr>

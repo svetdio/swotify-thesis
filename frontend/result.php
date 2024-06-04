@@ -27,6 +27,7 @@ $negative_rate = array(
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/versions/bulma-no-dark-mode.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="dashboard/dashboard.css">
 </head>
 
 <body>
@@ -79,7 +80,7 @@ $negative_rate = array(
 
         <div class="grid">
             <div class="cell mt-2">
-                <table class="table is-fullwidth">
+                <table id="modelResult" class="table is-fullwidth">
                     <thead>
                         <tr>
                             <th>Questions</th>

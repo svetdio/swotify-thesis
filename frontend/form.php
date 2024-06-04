@@ -6,42 +6,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/versions/bulma-no-dark-mode.min.css">
     <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-6.5.2-web/css/all.min.css">
-    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+    <link rel="stylesheet" type="text/css" href="dashboard/dashboard.css">
     <link rel="icon" href="assets/sentiment-analysis.png">
 </head>
 
 <body>
-    <section class="hero is-small is-primary">
-        <div class="hero-head">
-            <nav class="navbar" role="navigation" aria-label="main navigation">
-                <div class="navbar-brand">
-                    <a class="navbar-item" href="index.php">
-                        <img src="assets/sentiment-analysis.png" alt="Page logo">
-                    </a>
+    <nav class="navbar is-link" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="index.php">
+                <img src="assets/sentiment-analysis.png" alt="Page logo">
+            </a>
 
-                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                </div>
-
-                <div id="navbarBasicExample" class="navbar-menu">
-                    <div class="navbar-start">
-                        <a href="index.php" class="navbar-item">Home</a>
-                        <a href="dashboard.php" class="navbar-item">Analysis Dashboard</a>
-                        <a href="form.php" class="navbar-item is-selected">Model Validation Form</a>
-                    </div>
-
-                    <div class="navbar-end">
-                        <div class="navbar-item">
-                            <a href="https://colab.research.google.com/drive/1nGLgxrAnrBgf3PYlc9shmnaHIEH_ywDi#scrollTo=zUSzysEZHOMy" class="navbar-item">Training Notebook</a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
         </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a href="index.php" class="navbar-item">Home</a>
+                <a href="dashboard.php" class="navbar-item">Analysis Dashboard</a>
+                <a href="form.php" class="navbar-item is-selected">Model Validation Form</a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <a href="https://colab.research.google.com/drive/1nGLgxrAnrBgf3PYlc9shmnaHIEH_ywDi#scrollTo=zUSzysEZHOMy" class="navbar-item">Training Notebook</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero is-small is-primary">
         <div class="hero-body">
             <p class="subtitle has-text-weight-semibold">Model Validation Form</p>
         </div>

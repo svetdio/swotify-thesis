@@ -1,3 +1,14 @@
+@font-face {
+    font-family: homePageFont;
+    src: url('../assets/fonts/norwester.otf');
+}
+
+.titlePage {
+    font-family: homePageFont !important;
+    font-size: 5rem;
+    padding-left: 3vw;
+}   
+
 .box {
     height: 100%;
 }
@@ -5,4 +16,25 @@
 .box canvas {
     box-sizing: border-box;
     width: 10%;
+}
+
+#homepage {
+    background-image: url('../assets/background.jpg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.navbar-start>a {
+    border-right: 1px solid #8d8c8c;
+}
+
+.navbar-start>a:last-child {
+    border-right: none;
+}
+
+#sentiment_comments tbody tr:nth-child(even),
+#modelResult tbody tr:nth-child(even) {
+    background-color: #ededed;
+    /* Adjust the color code to make it darker */
 }

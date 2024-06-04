@@ -173,7 +173,7 @@ $(function () {
                     {
                         label: 'Overall Performance',
                         data: global_perf_ratings,
-                        backgroundColor: 'hsl(0, 0%, 86%)',
+                        backgroundColor: 'hsl(184, 8%, 69%)',
                         hoverOffset: 4
                     }
                     ]
@@ -200,7 +200,7 @@ $(function () {
 
         for (const d of data) {
             tbl_content += "<tr>";
-            tbl_content += "<td>" + d.evaluator + "</td>";
+            // tbl_content += "<td>" + d.evaluator + "</td>";
             tbl_content += "<td>" + d.event_contribution + "</td>";
             tbl_content += "<td>" + d.comment_feedback + "</td>";
             tbl_content += "</tr>";
