@@ -1,7 +1,7 @@
 $(function () {
 
-     // Mapping between evaluatees and positions
-     const evaluateePositionMap = {
+    // Mapping between evaluatees and positions
+    const evaluateePositionMap = {
         "VAN ELLIS V. MERCADO": "PRESIDENT",
         "HANS CHRISTIAN O. ANCIERTO": "VP - INTERNAL",
         "JOLO MARCO B. RAMOS": "VP - EXTERNAL",
@@ -36,7 +36,7 @@ $(function () {
         value: '',
         text: 'Select Evaluatee'
     }));
-    
+
     for (const evaluatee in evaluateePositionMap) {
         if (evaluateePositionMap.hasOwnProperty(evaluatee)) {
             $('#evaluatee').append($('<option>', {
@@ -56,35 +56,4 @@ $(function () {
     // Trigger change event on page load to autofill position if an evaluatee is pre-selected
     $('#evaluatee').change();
 
-    
-
-//     $.ajax({
-//         url: "http://localhost:8000/get_officers_names",
-//         success: function (data) {
-//             let options = "<option value>Select Evaluatee</option>"
-
-//             for (const key in data.officers) {
-//                 if (data.officers.hasOwnProperty(key)) {
-//                     options += "<option value = '"+data.officers[key]+"'>"+data.officers[key]+"</option>"
-//                 }
-//             }
-//             $("#evaluatee").html(options)
-
-//         }
-//     });
-
-//     $.ajax({
-//         url: "http://localhost:8000/get_position",
-//         success: function (data) {
-//             let options = "<option value>Select Position of the Evaluatee</option>"
-
-//             for (const key in data.position) {
-//                 if (data.position.hasOwnProperty(key)) {
-//                     options += "<option value = '"+data.position[key]+"'>"+data.position[key]+"</option>"
-//                 }
-//             }
-//             $("#position").html(options)
-
-//         }
-//     });
 })

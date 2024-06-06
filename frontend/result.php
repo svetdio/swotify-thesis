@@ -5,7 +5,7 @@ $positive_rate = array(
     '3' => 'Neutral',
     '2' => 'Disagree',
     '1' => 'Strongly Disagree'
-    );
+);
 
 $negative_rate = array(
     '1' => 'Strongly Agree',
@@ -13,7 +13,7 @@ $negative_rate = array(
     '3' => 'Neutral',
     '4' => 'Disagree',
     '5' => 'Strongly Disagree'
-    );
+);
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +27,12 @@ $negative_rate = array(
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/versions/bulma-no-dark-mode.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+
     <link rel="stylesheet" href="dashboard/dashboard.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
 </head>
 
 <body>
@@ -78,79 +83,283 @@ $negative_rate = array(
         </section>
 
 
+
         <div class="grid">
-            <div class="cell mt-2">
-                <div class="cell has-background-white-ter has-text-primary-invert has-radius-normal p-5">
-                    <div class="content">
-                    <p class="is-size-5"><b>Name of the Evaluatee:</b> <?php echo htmlspecialchars($_POST['evaluatee']); ?></p>
-                    <p class="is-size-5"><b>Position of the Evaluatee:</b> <?php echo htmlspecialchars($_POST['position']); ?></p>
+            <div id="tabs">
+                <ul>
+                    <li><a href="#tabs-1">Results</a></li>
+                    <li><a href="#tabs-2">Confusion Matrix</a></li>
+                    <li><a href="#tabs-3">Classification Metrics Report</a></li>
+                </ul>
+                <div id="tabs-1">
+                    <div class="cell mt-2">
+                        <div class="cell has-background-white-ter has-text-primary-invert has-radius-normal p-5">
+                            <div class="content">
+                                <p class="is-size-5"><b>Name of the Evaluatee:</b> <?php echo htmlspecialchars($_POST['evaluatee']); ?></p>
+                                <p class="is-size-5"><b>Position of the Evaluatee:</b> <?php echo htmlspecialchars($_POST['position']); ?></p>
+                            </div>
+                        </div>
+
+                        <table id="modelResult" class="table is-fullwidth">
+                            <tbody>
+                                <tr>
+                                    <th>Questions</th>
+                                    <th>Response</th>
+                                </tr>
+                                <tr>
+                                    <td>He/She was well-prepared for his/her responsibilities during the Local CAF 2024?</td>
+                                    <td><?php echo $positive_rate[$_POST['responsibility_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>He/She effectively communicated with his/her team members before and during the Local CAF 2024?</td>
+                                    <td><?php echo $positive_rate[$_POST['team_communication_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>He/She was able to delegate tasks effectively and ensure he/she were completed on time?</td>
+                                    <td><?php echo $positive_rate[$_POST['task_delegation_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>He/She remained calm and collected under pressure during the event?</td>
+                                    <td><?php echo $positive_rate[$_POST['calmness_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>He/She was able to adapt to unexpected challenges and changes before or during the Local CAF 2024?</td>
+                                    <td><?php echo $positive_rate[$_POST['adaptability_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>He/She consistently displayed a positive and enthusiastic attitude throughout the Local CAF 2024?</td>
+                                    <td><?php echo $positive_rate[$_POST['attitude_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Do you think he/she face any difficulties with communication or collaboration during the event?</td>
+                                    <td><?php echo $negative_rate[$_POST['comm_collab_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>In any external factors that threatened the success of the event, did he/she respond relatively?</td>
+                                    <td><?php echo $positive_rate[$_POST['external_resp_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>He/She did not effectively manage his/her time during the event?</td>
+                                    <td><?php echo $negative_rate[$_POST['time_management_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>He/She did not collaborate effectively with other CSG officers or committees?</td>
+                                    <td><?php echo $negative_rate[$_POST['collab_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>He/She was not flexible in his/her approach to problem-solving during the Local CAF 2024?</td>
+                                    <td><?php echo $negative_rate[$_POST['flexible_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>He/She did not take responsibility for his/her mistakes or the mistakes of his/her team?</td>
+                                    <td><?php echo $negative_rate[$_POST['accountability_rating']] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>What do you think is his/her greatest contribution and what opportunity did he/she unlock during Local CAF 2024 event?</td>
+                                    <td><?php echo $_POST['event_contribution'] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Do you have any comment, suggestion/s, and recommendation/s?</td>
+                                    <td><?php echo $_POST['comment_feedback'] ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-                <table id="modelResult" class="table is-fullwidth">
-                    <tbody>
-                        <tr>
-                            <th>Questions</th>
-                            <th>Response</th>
-                        </tr>
-                        <tr>
-                            <td>He/She was well-prepared for his/her responsibilities during the Local CAF 2024?</td>
-                            <td><?php echo $positive_rate[$_POST['responsibility_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>He/She effectively communicated with his/her team members before and during the Local CAF 2024?</td>
-                            <td><?php echo $positive_rate[$_POST['team_communication_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>He/She was able to delegate tasks effectively and ensure he/she were completed on time?</td>
-                            <td><?php echo $positive_rate[$_POST['task_delegation_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>He/She remained calm and collected under pressure during the event?</td>
-                            <td><?php echo $positive_rate[$_POST['calmness_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>He/She was able to adapt to unexpected challenges and changes before or during the Local CAF 2024?</td>
-                            <td><?php echo $positive_rate[$_POST['adaptability_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>He/She consistently displayed a positive and enthusiastic attitude throughout the Local CAF 2024?</td>
-                            <td><?php echo $positive_rate[$_POST['attitude_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>Do you think he/she face any difficulties with communication or collaboration during the event?</td>
-                            <td><?php echo $negative_rate[$_POST['comm_collab_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>In any external factors that threatened the success of the event, did he/she respond relatively?</td>
-                            <td><?php echo $positive_rate[$_POST['external_resp_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>He/She did not effectively manage his/her time during the event?</td>
-                            <td><?php echo $negative_rate[$_POST['time_management_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>He/She did not collaborate effectively with other CSG officers or committees?</td>
-                            <td><?php echo $negative_rate[$_POST['collab_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>He/She was not flexible in his/her approach to problem-solving during the Local CAF 2024?</td>
-                            <td><?php echo $negative_rate[$_POST['flexible_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>He/She did not take responsibility for his/her mistakes or the mistakes of his/her team?</td>
-                            <td><?php echo $negative_rate[$_POST['accountability_rating']] ?></td>
-                        </tr>
-                        <tr>
-                            <td>What do you think is his/her greatest contribution and what opportunity did he/she unlock during Local CAF 2024 event?</td>
-                            <td><?php echo $_POST['event_contribution'] ?></td>
-                        </tr>
-                        <tr>
-                            <td>Do you have any comment, suggestion/s, and recommendation/s?</td>
-                            <td><?php echo $_POST['comment_feedback'] ?></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div id="tabs-2">
+                    <div class="grid">
+                        <div class="cell has-background-light has-text-success-invert has-radius-normal p-3 mt-2 has-text-centered ">
+                            <figure class="image is-1by1">
+                                <img src="assets/knn_test_default.jpg" alt="">
+                            </figure>
+                        </div>
+                        <div class="cell has-background-light has-text-primary-invert has-radius-normal p-3 mt-2 has-text-centered">
+                            <figure class="image is-1by1">
+                                <img src="assets/svc_test_tuned.jpg" alt="">
+                            </figure>
+                        </div>
+                        <div class="cell has-background-light has-text-primary-invert has-radius-normal p-3 mt-2 has-text-centered">
+                            <figure class="image is-1by1">
+                                <img src="assets/xgb_test_tuned.jpg" alt="">
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <div id="tabs-3">
+                    <div class="grid">
+                        <div class="cell has-background-light has-text-success-invert has-radius-normal p-3 mt-2 has-text-centered ">
+                            <div class="label is-size-5">K-NEAREST NEIGHBORS</div>
+                            <table class="table is-hoverable is-fullwidth">
+                                <tr>
+                                    <td></td>
+                                    <th>Precision</th>
+                                    <th>Recall</th>
+                                    <th>F1 Score</th>
+                                    <th>Support</th>
+                                </tr>
+                                <tr>
+                                    <th>Neutral</th>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <th>Positive</th>
+                                    <td>0.91</td>
+                                    <td>1.00</td>
+                                    <td>0.95</td>
+                                    <td>20</td>
+                                </tr>
+                                <tr>
+                                    <th>Negative</th>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td colspan=5></td>
+                                </tr>
+                                <tr>
+                                    <th>Accuracy</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0.87</td>
+                                    <td>23</td>
+                                </tr>
+                                <tr>
+                                    <th>Macro Average</th>
+                                    <td>0.30</td>
+                                    <td>0.33</td>
+                                    <td>0.32</td>
+                                    <td>23</td>
+                                </tr>
+                                <tr>
+                                    <th>Weighted Average</th>
+                                    <td>0.79</td>
+                                    <td>0.87</td>
+                                    <td>0.83</td>
+                                    <td>23</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="cell has-background-light has-text-primary-invert has-radius-normal p-3 mt-2 has-text-centered">
+                            <div class="label is-size-5">SUPPORT VECTOR MACHINE</div>
+                            <table class="table is-hoverable is-fullwidth">
+                                <tr>
+                                    <td></td>
+                                    <th>Precision</th>
+                                    <th>Recall</th>
+                                    <th>F1 Score</th>
+                                    <th>Support</th>
+                                </tr>
+                                <tr>
+                                    <th>Neutral</th>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <th>Positive</th>
+                                    <td>0.87</td>
+                                    <td>1.00</td>
+                                    <td>0.93</td>
+                                    <td>20</td>
+                                </tr>
+                                <tr>
+                                    <th>Negative</th>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td colspan=5></td>
+                                </tr>
+                                <tr>
+                                    <th>Accuracy</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0.87</td>
+                                    <td>23</td>
+                                </tr>
+                                <tr>
+                                    <th>Macro Average</th>
+                                    <td>0.29</td>
+                                    <td>0.33</td>
+                                    <td>0.31</td>
+                                    <td>23</td>
+                                </tr>
+                                <tr>
+                                    <th>Weighted Average</th>
+                                    <td>0.76</td>
+                                    <td>0.87</td>
+                                    <td>0.81</td>
+                                    <td>23</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="cell has-background-light has-text-primary-invert has-radius-normal p-3 mt-2 has-text-centered">
+                            <div class="label is-size-5">GRADIENT BOOSTING</div>
+                            <table class="table is-hoverable is-fullwidth">
+                                <tr>
+                                    <td></td>
+                                    <th>Precision</th>
+                                    <th>Recall</th>
+                                    <th>F1 Score</th>
+                                    <th>Support</th>
+                                </tr>
+                                <tr>
+                                    <th>Neutral</th>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <th>Positive</th>
+                                    <td>0.87</td>
+                                    <td>1.00</td>
+                                    <td>0.93</td>
+                                    <td>20</td>
+                                </tr>
+                                <tr>
+                                    <th>Negative</th>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>0.00</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td colspan=5></td>
+                                </tr>
+                                <tr>
+                                    <th>Accuracy</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td>0.87</td>
+                                    <td>23</td>
+                                </tr>
+                                <tr>
+                                    <th>Macro Average</th>
+                                    <td>0.29</td>
+                                    <td>0.33</td>
+                                    <td>0.31</td>
+                                    <td>23</td>
+                                </tr>
+                                <tr>
+                                    <th>Weighted Average</th>
+                                    <td>0.76</td>
+                                    <td>0.87</td>
+                                    <td>0.81</td>
+                                    <td>23</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -236,6 +445,8 @@ $negative_rate = array(
 
             })
     </script>
+
+    <script src="result.js"></script>
 </body>
 
 </html>
