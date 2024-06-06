@@ -2,7 +2,6 @@
 
 <head>
     <title>SWOTIFY SA Form</title>
-    <!-- <script src="script.js"></script> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/versions/bulma-no-dark-mode.min.css">
     <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-6.5.2-web/css/all.min.css">
@@ -10,9 +9,9 @@
     <link rel="icon" href="assets/sentiment-analysis.png">
 </head>
 
-<body>
+<body style="background-color: hsl(240, 3%, 94%);">
     <nav class="navbar is-link" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
+        <!-- <div class="navbar-brand">
             <a class="navbar-item" href="index.php">
                 <img src="assets/sentiment-analysis.png" alt="Page logo">
             </a>
@@ -23,7 +22,7 @@
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
-        </div>
+        </div> -->
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
@@ -32,28 +31,53 @@
                 <a href="form.php" class="navbar-item is-selected">Model Validation Form</a>
             </div>
 
-            <div class="navbar-end">
+            <!-- <div class="navbar-end">
                 <div class="navbar-item">
                     <a href="https://colab.research.google.com/drive/1nGLgxrAnrBgf3PYlc9shmnaHIEH_ywDi#scrollTo=zUSzysEZHOMy" class="navbar-item">Training Notebook</a>
                 </div>
-            </div>
+            </div> -->
         </div>
     </nav>
 
     <section class="hero is-small is-primary">
         <div class="hero-body">
             <p class="subtitle has-text-weight-semibold">Model Validation Form</p>
+            <p class="subtitle">This page utilizes the published model of the study for predicting the sentiment of the feedback based on the performance ratings.</p>
         </div>
     </section>
 
-    <section class="section p-2">
+    <section class="section p-5">
         <div class="container">
             <div class="columns">
                 <div class="column">
                     <form id="sentimentForm" method="POST" action="result.php">
                         <div class="form">
+
                             <div class="box">
-                                <p class="title is-6">
+                                <p class="title is-6">Who do you want to evaluate?<span class="required">*</span></p>
+                                <div class="select">
+                                    <select id="evaluatee" required name="evaluatee">
+                                    </select>
+                                </div>   
+                            </div>
+                            
+                            <div class="box">
+                                <p class="title is-6">Position of the evaluatee<span class="required">*</span></p>
+                                <div class="control">
+                                    <input class="input" type="text" id="position" name="position" placeholder="This is auto-filled" readonly style="width: 24.7%;">
+                                </div>
+                            </div>
+
+                            <!-- <div class="box">
+                                <p class="title is-6">Position of the evaluatee<span class="required">*</span></p>
+                                <div class="control">
+                                    <div class="column is-half">
+                                        <input class="input" type="text" id="position" name="position" placeholder="This field is auto fill" readonly>
+                                    </div>
+                                </div>
+                            </div> -->
+                        
+                            <div class="box">
                                 <p class="title is-6">He/She was well-prepared for his/her responsibilities during the Local CAF 2024?<span class="required">*</span></p>
                                 <input type="radio" id="responsibility_rating_rating5" name="responsibility_rating" value="5" required>
                                 <label for="responsibility_rating_rating5">Strongly Agree</label><br>
@@ -65,7 +89,6 @@
                                 <label for="responsibility_rating_rating2">Disagree</label><br>
                                 <input type="radio" id="responsibility_rating_rating1" name="responsibility_rating" value="1" required>
                                 <label for="responsibility_rating_rating1">Strongly Disagree</label>
-
                             </div>
 
                             <div class="box">
@@ -229,7 +252,7 @@
                                 </p>
                                 <div class="field">
                                     <div class="control">
-                                        <textarea class="textarea" name="event_contribution" placeholder="Your answer" required></textarea>
+                                        <textarea class="textarea has-fixed-size" name="event_contribution" placeholder="Your answer" required></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -241,7 +264,7 @@
                                 </p>
                                 <div class="field">
                                     <div class="control">
-                                        <textarea class="textarea" name="comment_feedback" placeholder="Your answer" required></textarea>
+                                        <textarea class="textarea has-fixed-size" name="comment_feedback" placeholder="Your answer" required></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -257,4 +280,7 @@
         </div>
 
     </section>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="script.js"></script>
 </body>

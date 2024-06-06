@@ -38,3 +38,7 @@
     background-color: #ededed;
     /* Adjust the color code to make it darker */
 }
+
+span.required {
+    color: red;
+}

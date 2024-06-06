@@ -1,71 +1,90 @@
-function validateForm() {
-    var form = document.getElementById("sentimentForm");
-    var radios = form.querySelectorAll("input[type='radio']");
-    var inputs = form.querySelectorAll("textarea[required]");
+$(function () {
 
-    // Reset all notifications
-    var notifications = form.querySelectorAll(".notification");
-    for (var i = 0; i < notifications.length; i++) {
-        notifications[i].innerHTML = "";
-    }
+     // Mapping between evaluatees and positions
+     const evaluateePositionMap = {
+        "VAN ELLIS V. MERCADO": "PRESIDENT",
+        "HANS CHRISTIAN O. ANCIERTO": "VP - INTERNAL",
+        "JOLO MARCO B. RAMOS": "VP - EXTERNAL",
+        "KARYLLE D. DELICANA": "SECRETARY",
+        "DJERRAMAINE MARIE RAMOS": "TREASURER",
+        "RHODA MAE C. PALEN": "AUDITOR",
+        "MIRALUNA DELA PEÑA": "P.R.O.",
+        "ALEX S. COSTA JR.": "SAP",
+        "AUBRIANA CHANELLE M BUYO": "SAP",
+        "CHERRY BELLE R. GILANA": "SAP",
+        "EDGSEL G. SOLICITO": "SAP",
+        "KARL FIOLO S. CALMA": "SAP",
+        "LOUBERT L. APIN": "SAP",
+        "MARIA EUNILA A. ORCASITAS": "SAP",
+        "TRACY MARGARETTE R. RAMENTO": "SAP",
+        "XENALYN S. BELENCIO": "SAP",
+        "CARL JUSTIN I. JUNTILLA": "DOCU COMM",
+        "CLINTON MALICDON": "DOCU COMM",
+        "JULLIANE FAYE C. CORDERO": "DOCU COMM",
+        "RIO YSABEL O. ESTOPACE": "STRAAW COMM",
+        "ARNIE MONICA A. DEL ROSARIO": "PROPERTY COMM",
+        "CHRISLYNNE SALAS": "CIRCULATION COMM",
+        "KRIZIA MAE C. TOLENTINO": "CREATIVES COMM",
+        "MARJURIE ANNE A. GUIEB": "CREATIVES COMM",
+        "DAVE KENNETH C. TORRES": "TECHNICAL COMM",
+        "JESSEL ANDREA D. MORALEDA": "SOCENVI COMM"
+    };
 
-    var isValid = true;
-
-    // Check if at least one radio button is checked for each question
-    for (var i = 0; i < radios.length; i++) {
-        var groupName = radios[i].name;
-        var groupRadios = form.querySelectorAll("input[name='" + groupName + "']:checked");
-        if (groupRadios.length === 0) {
-            var notificationId = "notification" + groupName.substring(6); // Extract the question number from the radio button group name
-            document.getElementById(notificationId).innerHTML = "This field is required.";
-            isValid = false;
+    // Populate the evaluatee dropdown
+    const evaluateeSelect = $('#evaluatee');
+    evaluateeSelect.append($('<option>', {
+        value: '',
+        text: 'Select Evaluatee'
+    }));
+    
+    for (const evaluatee in evaluateePositionMap) {
+        if (evaluateePositionMap.hasOwnProperty(evaluatee)) {
+            $('#evaluatee').append($('<option>', {
+                value: evaluatee,
+                text: evaluatee
+            }));
         }
     }
 
-    // Check if text inputs are not empty
-    // for (var i = 0; i < textInputs.length; i++) {
-    //     if (textInputs[i].value.trim() === "") {
-    //         var inputName = textInputs[i].name;
-    //         var questionNumber = inputName.match(/\d+/)[0]; // Extract the question number from the text input name
-    //         var notificationId = "notification" + questionNumber;
-    //         document.getElementById(notificationId).innerHTML = "This field is required.";
-    //         isValid = false;
-    //     }
-    // }
-
-    inputs.forEach(function (input) {
-        if (!input.value.trim()) {
-            isValid = false;
-            var notification = input.parentNode.querySelector(".notification");
-            notification.textContent = "This field is required.";
-        } else {
-            var notification = input.parentNode.querySelector(".notification");
-            notification.textContent = "";
-        }
+    // When an evaluatee is selected, autofill the position
+    $('#evaluatee').change(function () {
+        const selectedEvaluatee = $(this).val();
+        const position = evaluateePositionMap[selectedEvaluatee];
+        $('#position').val(position);
     });
 
-    // Submit the form if all fields are valid
-    if (isValid) {
-        form.submit();
-        // window.location.href = "result.php";
-    }
-}
+    // Trigger change event on page load to autofill position if an evaluatee is pre-selected
+    $('#evaluatee').change();
 
+    
 
+//     $.ajax({
+//         url: "http://localhost:8000/get_officers_names",
+//         success: function (data) {
+//             let options = "<option value>Select Evaluatee</option>"
 
+//             for (const key in data.officers) {
+//                 if (data.officers.hasOwnProperty(key)) {
+//                     options += "<option value = '"+data.officers[key]+"'>"+data.officers[key]+"</option>"
+//                 }
+//             }
+//             $("#evaluatee").html(options)
 
-
-//     var inputs = document.querySelectorAll("input[required]");
-//     var isValid = true;
-
-//     inputs.forEach(function(input) {
-//         if (!input.value.trim()) {
-//             isValid = false;
-//             var notification = input.parentNode.querySelector(".notification");
-//             notification.textContent = "This field is required.";
-//         } else {
-//             var notification = input.parentNode.querySelector(".notification");
-//             notification.textContent = "";
 //         }
 //     });
-// }
+
+//     $.ajax({
+//         url: "http://localhost:8000/get_position",
+//         success: function (data) {
+//             let options = "<option value>Select Position of the Evaluatee</option>"
+
+//             for (const key in data.position) {
+//                 if (data.position.hasOwnProperty(key)) {
+//                     options += "<option value = '"+data.position[key]+"'>"+data.position[key]+"</option>"
+//                 }
+//             }
+//             $("#position").html(options)
+
+//         }
+//     });
+})

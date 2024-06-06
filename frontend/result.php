@@ -80,14 +80,19 @@ $negative_rate = array(
 
         <div class="grid">
             <div class="cell mt-2">
+                <div class="cell has-background-white-ter has-text-primary-invert has-radius-normal p-5">
+                    <div class="content">
+                    <p class="is-size-5"><b>Name of the Evaluatee:</b> <?php echo htmlspecialchars($_POST['evaluatee']); ?></p>
+                    <p class="is-size-5"><b>Position of the Evaluatee:</b> <?php echo htmlspecialchars($_POST['position']); ?></p>
+                    </div>
+                </div>
+
                 <table id="modelResult" class="table is-fullwidth">
-                    <thead>
+                    <tbody>
                         <tr>
                             <th>Questions</th>
                             <th>Response</th>
                         </tr>
-                    </thead>
-                    <tbody>
                         <tr>
                             <td>He/She was well-prepared for his/her responsibilities during the Local CAF 2024?</td>
                             <td><?php echo $positive_rate[$_POST['responsibility_rating']] ?></td>

@@ -121,7 +121,19 @@ async def get_officers_names(keyword: Union[str, None] = None):
         """
     return pysqldf(q).to_dict()
 
-    
+@app.get('/get_position')
+async def get_position(keyword: Union[str, None] = None):
+
+    q = """
+        SELECT DISTINCT position AS position FROM swotify 
+    """
+
+    if keyword is not None:
+        q = f"""
+            SELECT DISTINCT position AS position FROM swotify WHERE position LIKE '%{keyword}%'
+        """
+    return pysqldf(q).to_dict()
+
 @app.get('/get_sentiment_values/{evaluatee}')
 async def get_dashboard_values(evaluatee: Union[str, None] = None):
     if evaluatee is None:

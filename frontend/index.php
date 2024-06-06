@@ -16,7 +16,7 @@
 
 <body>
     <nav class="navbar is-link" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
+        <!-- <div class="navbar-brand">
             <a class="navbar-item" href="index.php">
                 <img src="assets/sentiment-analysis.png" alt="Page logo">
             </a>
@@ -27,7 +27,7 @@
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
-        </div>
+        </div> -->
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
@@ -37,11 +37,11 @@
             </div>
         </div>
 
-        <div class="navbar-end">
+        <!-- <div class="navbar-end">
             <div class="navbar-item">
                 <a href="https://colab.research.google.com/drive/1nGLgxrAnrBgf3PYlc9shmnaHIEH_ywDi#scrollTo=zUSzysEZHOMy" class="navbar-item">Training Notebook</a>
             </div>
-        </div>
+        </div> -->
     </nav>
 
     <section class="hero is-fullheight-with-navbar">
