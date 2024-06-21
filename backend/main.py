@@ -1,3 +1,6 @@
+import time
+from fastapi.responses import StreamingResponse
+
 import pickle
 import pandas as pd
 from pandasql import sqldf
@@ -18,6 +21,8 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
+
+from train import execute_train
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
@@ -54,9 +59,9 @@ class PredictionInput(BaseModel):
     event_contribution: str
 
 # Fetch and load the models
-knn_model = pickle.load(open('models/init_knn_model.pkl', 'rb'))
-svc_model = pickle.load(open('models/tuned_svc_model.pkl', 'rb'))
-xgb_model = pickle.load(open('models/tuned_xgb_model.pkl', 'rb'))
+knn_model = pickle.load(open('models/knn_model_v2.pkl', 'rb'))
+svc_model = pickle.load(open('models/svc_model_v2.pkl', 'rb'))
+xgb_model = pickle.load(open('models/xgb_model_v2.pkl', 'rb'))
 
 sia = SentimentIntensityAnalyzer()
 
@@ -93,9 +98,9 @@ async def predict(ratings: PredictionInput):
 
     sentiment_cls = "NEUTRAL"
 
-    if final_score >= 0.05:
+    if final_score >= 0:
         sentiment_cls = "POSITIVE"
-    elif final_score <= -0.05:
+    elif final_score <= 0:
         sentiment_cls = "NEGATIVE"
 
     return {
@@ -196,6 +201,22 @@ async def get_comments(evaluatee: Union[str, None] = None):
             WHERE evaluatee = '{evaluatee}'
         """
     return pysqldf(q).to_dict(orient="records")
+
+@app.get('/train')
+async def train(csv_url: Union[str, None] = None):
+    return StreamingResponse(execute_train(csv_url), media_type='text/event-stream')
+
+
+@app.get('/sample')
+async def sample():
+    with open("models/sample.txt", "w") as f:   # Opens file and casts as f 
+        f.write("Hello World form " + f.name) 
+
+@app.get('/sample2')
+async def sample2():
+    f = open("models/sample.txt", "r")
+    return f.read()
+    
 
 if __name__ == "__main__":
     import uvicorn
