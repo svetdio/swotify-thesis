@@ -33,7 +33,8 @@
             <div class="navbar-start">
                 <a href="index.php" class="navbar-item">Home</a>
                 <a href="dashboard.php" class="navbar-item is-selected">Analysis Dashboard</a>
-                <a href="form.php" class="navbar-item">Model Validation Form</a>
+                <a href="form.php" class="navbar-item">Model Validation Form for CSG</a>
+                <a href="train.php" class="navbar-item is-selected">Trainer</a>
             </div>
         </div>
 

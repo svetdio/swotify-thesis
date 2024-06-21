@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <head>
-    <title>SWOTIFY SA Form</title>
+    <title>BITS SA Form</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/versions/bulma-no-dark-mode.min.css">
     <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-6.5.2-web/css/all.min.css">
@@ -30,7 +30,7 @@
                 <a href="dashboard.php" class="navbar-item">Analysis Dashboard</a>
                 <a href="form.php" class="navbar-item is-selected">Model Validation Form for CSG</a>
                 <a href="bitsform.php" class="navbar-item is-selected">Model Validation Form for BITS</a>
-                <a href="train.php" class="navbar-item is-selected">Trainer</a>
+                <!-- <a href="train.php" class="navbar-item is-selected">Trainer</a> -->
             </div>
 
             <!-- <div class="navbar-end">
@@ -52,7 +52,7 @@
         <div class="container">
             <div class="columns">
                 <div class="column">
-                    <form id="sentimentForm" method="POST" action="result.php">
+                    <form id="sentimentForm" method="POST" action="result-bits.php">
                         <div class="form">
 
                             <div class="box">
@@ -80,7 +80,7 @@
                             </div> -->
                         
                             <div class="box">
-                                <p class="title is-6">He/She was well-prepared for his/her responsibilities during the Local CAF 2024?<span class="required">*</span></p>
+                                <p class="title is-6">He/She was well-prepared for his/her responsibilities during the IT Appreciation Day?<span class="required">*</span></p>
                                 <input type="radio" id="responsibility_rating_rating5" name="responsibility_rating" value="5" required>
                                 <label for="responsibility_rating_rating5">Strongly Agree</label><br>
                                 <input type="radio" id="responsibility_rating_rating4" name="responsibility_rating" value="4" required>
@@ -94,7 +94,7 @@
                             </div>
 
                             <div class="box">
-                                <p class="title is-6">He/She effectively communicated with his/her team members before and during the Local CAF 2024?<span class="required">*</span></p>
+                                <p class="title is-6">He/She effectively communicated with his/her team members before and during the IT Appreciation Day?<span class="required">*</span></p>
                                 <input type="radio" id="team_communication_rating_rating5" name="team_communication_rating" value="5" required>
                                 <label for="team_communication_rating_rating5">Strongly Agree</label><br>
                                 <input type="radio" id="team_communication_rating_rating4" name="team_communication_rating" value="4" required>
@@ -136,7 +136,7 @@
                             </div>
 
                             <div class="box">
-                                <p class="title is-6">He/She was able to adapt to unexpected challenges and changes before or during the Local CAF 2024?<span class="required">*</span></p>
+                                <p class="title is-6">He/She was able to adapt to unexpected challenges and changes before or during the IT Appreciation Day?<span class="required">*</span></p>
                                 <input type="radio" id="adaptability_rating_rating5" name="adaptability_rating" value="5" required>
                                 <label for="adaptability_rating_rating5">Strongly Agree</label><br>
                                 <input type="radio" id="adaptability_rating_rating4" name="adaptability_rating" value="4" required>
@@ -150,7 +150,7 @@
                             </div>
 
                             <div class="box">
-                                <p class="title is-6">He/She consistently displayed a positive and enthusiastic attitude throughout the Local CAF 2024?<span class="required">*</span></p>
+                                <p class="title is-6">He/She consistently displayed a positive and enthusiastic attitude throughout the IT Appreciation Day?<span class="required">*</span></p>
                                 <input type="radio" id="attitude_rating_rating5" name="attitude_rating" value="5" required>
                                 <label for="attitude_rating_rating5">Strongly Agree</label><br>
                                 <input type="radio" id="attitude_rating_rating4" name="attitude_rating" value="4" required>
@@ -220,7 +220,7 @@
                             </div>
 
                             <div class="box">
-                                <p class="title is-6">He/She was not flexible in his/her approach to problem-solving during the Local CAF 2024?<span class="required">*</span></p>
+                                <p class="title is-6">He/She was not flexible in his/her approach to problem-solving during the IT Appreciation Day?<span class="required">*</span></p>
                                 <input type="radio" id="flexible_rating_rating5" name="flexible_rating" value="1" required>
                                 <label for="flexible_rating_rating5">Strongly Agree</label><br>
                                 <input type="radio" id="flexible_rating_rating4" name="flexible_rating" value="2" required>
@@ -249,7 +249,7 @@
 
                             <div class="box">
                                 <p class="title is-6">
-                                    What do you think is his/her greatest contribution and what opportunity did he/she unlock during Local CAF 2024 event?
+                                    What do you think is his/her greatest contribution and what opportunity did he/she unlock during IT Appreciation Day event?
                                     <span class="required">*</span>
                                 </p>
                                 <div class="field">
@@ -284,5 +284,5 @@
     </section>
 
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="script.js"></script>
+    <script src="scriptbits.js"></script>
 </body>
