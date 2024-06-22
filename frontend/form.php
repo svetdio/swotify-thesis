@@ -30,9 +30,14 @@
                 <a href="dashboard.php" class="navbar-item">Analysis Dashboard</a>
                 <a href="form.php" class="navbar-item is-selected">Model Validation Form for CSG</a>
                 <a href="bitsform.php" class="navbar-item is-selected">Model Validation Form for BITS</a>
-                <a href="train.php" class="navbar-item is-selected">Trainer</a>
+                <!-- <a href="train.php" class="navbar-item is-selected">Trainer</a> -->
             </div>
 
+            <div class="navbar-end">
+                <div class="navbar-item">
+                <a href="train.php" class="navbar-item is-selected">Trainer</a>
+                </div>
+            </div>
             <!-- <div class="navbar-end">
                 <div class="navbar-item">
                     <a href="https://colab.research.google.com/drive/1nGLgxrAnrBgf3PYlc9shmnaHIEH_ywDi#scrollTo=zUSzysEZHOMy" class="navbar-item">Training Notebook</a>
