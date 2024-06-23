@@ -1,5 +1,10 @@
+import warnings
+warnings.filterwarnings('ignore')
+
 import pickle
+import os
 import time
+from datetime import datetime
 import pandas as pd
 from pandasql import sqldf
 from fastapi import FastAPI, Response
@@ -16,8 +21,6 @@ from deep_translator import GoogleTranslator # To translate non english words
 from num2words import num2words # To convert numbers and ordinals to words
 from deep_translator import GoogleTranslator # To translate non english words
 import emoji # For emoji character manipulation
-# import pattern
-# from pattern.en import lemma
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, OrdinalEncoder
@@ -59,69 +62,163 @@ nltk.download('averaged_perceptron_tagger')
 # nltk.download('vader_lexicon')
 
 def execute_train(csv_url):
-    data = {"message": f"Getting the CSV data from {csv_url}.."}
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
-    time.sleep(0.5)
-    df = pd.read_csv(csv_url)
-    row, col = df.shape
-    data['message'] = f"File downloaded, found {col} columns and {row} rows"
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
-    time.sleep(0.5)
+
+    data = {"message":""}
+
+    if csv_url is not None and csv_url != "":
+        data = {"message": f"Getting the CSV data from {csv_url}.."}
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        
+        df = pd.read_csv(csv_url)
+        row, col = df.shape
+
+        data['message'] = f"File downloaded, found {col} columns and {row} rows"
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        
+
+        data['message'] = f"Renaming columns..."
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+
+        # Rename columns to a proper name
+        # Create first a dictionary as a map of the old column names and the new column names
+        cols_to_rename = {
+            'Timestamp': 'timestamp',
+            'Email Address': 'email',
+            'DATA PRIVACY ACT\n\nTo ensure the protection of personal information collected through this Google Form, we are committed to complying with the provisions of Republic Act No. 10173 or the Data Privacy Act of 2012. This law protects the personal information of individuals by regulating its collection, use, storage, and distribution. \n\nWe take data privacy seriously and assure you that any information shared with us will be kept confidential and used only for the purpose stated in this form.\n\nBy clicking the "Agree", you consent to the use of your data for the said purpose in accordance with the Data Privacy Act.': 'data_privacy',
+            'FULL NAME: (Please select)': 'evaluator',
+            'POSITION': 'position',
+            'PRESENT DURING LOCAL CAF 2024?': 'present',
+            'I WANT TO EVALUATE:': 'evaluatee',
+            'He/She was well-prepared for his/her responsibilities during the Local CAF 2024?': 'responsibility_rating',
+            'He/She effectively communicated with his/her team members before and during the Local CAF 2024?': 'team_communication_rating',
+            'He/She was able to delegate tasks effectively and ensure he/she were completed on time?': 'task_delegation_rating',
+            'He/She remained calm and collected under pressure during the event?': 'calmness_rating',
+            'He/She was able to adapt to unexpected challenges and changes before or during the Local CAF 2024?': 'adaptability_rating',
+            'He/She consistently displayed a positive and enthusiastic attitude throughout the Local CAF 2024?': 'attitude_rating',
+            'Do you think he/she face any difficulties with communication or collaboration during the event?': 'no_comm_collab_rating',
+            'In any external factors that threatened the success of the event, did he/she respond relatively?': 'external_resp_rating',
+            'He/She did not effectively manage his/her time during the event?': 'no_time_management_rating',
+            'He/She did not collaborate effectively with other CSG officers or committees?': 'no_collab_rating',
+            'He/She was not flexible in his/her approach to problem-solving during the Local CAF 2024?': 'no_flexible_rating',
+            'He/She did not take responsibility for his/her mistakes or the mistakes of his/her team?': 'no_accountability_rating',
+            'Please answer in ENGLISH: \nWhat do you think is his/her greatest contribution and what opportunity did he/she unlock during Local CAF 2024 event? (Please insert "N/A" if none)': 'event_contribution',
+            'Do you have any comment, suggestion/s, and recommendation/s?  (Please insert "N/A" if none)': 'comment_feedback',
+
+            'PRESENT DURING IT APPRECIATION DAY?': 'present',
+            'He/She was well-prepared for his/her responsibilities during the IT Appreciation Day?': 'responsibility_rating',
+            'He/She effectively communicated with his/her team members before and during the IT Appreciation Day?': 'team_communication_rating',
+            'He/She was able to delegate tasks effectively and ensure he/she were completed on time?': 'task_delegation_rating',
+            'He/She remained calm and collected under pressure during the event?': 'calmness_rating',
+            'He/She was able to adapt to unexpected challenges and changes before or during the IT Appreciation Day?': 'adaptability_rating',
+            'He/She consistently displayed a positive and enthusiastic attitude throughout the IT Appreciation Day?': 'attitude_rating',
+            'Do you think he/she face any difficulties with communication or collaboration during the event?': 'no_comm_collab_rating',
+            'In any external factors that threatened the success of the event, did he/she respond relatively?': 'external_resp_rating',
+            'He/She did not effectively manage his/her time during the event?': 'no_time_management_rating',
+            'He/She did not collaborate effectively with other BITS officers or committees?': 'no_collab_rating',
+            'He/She was not flexible in his/her approach to problem-solving during the IT Appreciation Day?': 'no_flexible_rating',
+            'He/She did not take responsibility for his/her mistakes or the mistakes of his/her team?': 'no_accountability_rating',
+            'Please answer in ENGLISH: \nWhat do you think is his/her greatest contribution and what opportunity did he/she unlock during IT Appreciation Day? (Please insert "N/A" if none)': 'event_contribution',
+            'Do you have any comment, suggestion/s, and recommendation/s?  (Please insert "N/A" if none)': 'comment_feedback'
+        }
+
+        # Execute the rename using the dictionary
+        df = df.rename(columns=cols_to_rename)
+    
+        if set(df.columns) != set(list(cols_to_rename.values())):
+            data['message'] = f"Columns are not successfully renamed. CSV columns have wrong format."
+            yield f"event: mlerror\ndata: {json.dumps(data)}\n\n"     
 
 
-    data['message'] = f"Renaming columns..."
-    # Rename columns to a proper name
-    # Create first a dictionary as a map of the old column names and the new column names
-    cols_to_rename = {
-        'Timestamp': 'timestamp',
-        'Email Address': 'email',
-        'DATA PRIVACY ACT\n\nTo ensure the protection of personal information collected through this Google Form, we are committed to complying with the provisions of Republic Act No. 10173 or the Data Privacy Act of 2012. This law protects the personal information of individuals by regulating its collection, use, storage, and distribution. \n\nWe take data privacy seriously and assure you that any information shared with us will be kept confidential and used only for the purpose stated in this form.\n\nBy clicking the "Agree", you consent to the use of your data for the said purpose in accordance with the Data Privacy Act.': 'data_privacy',
-        'FULL NAME: (Please select)': 'evaluator',
-        'POSITION': 'position',
-        'PRESENT DURING LOCAL CAF 2024?': 'present',
-        'I WANT TO EVALUATE:': 'evaluatee',
-        'He/She was well-prepared for his/her responsibilities during the Local CAF 2024?': 'responsibility_rating',
-        'He/She effectively communicated with his/her team members before and during the Local CAF 2024?': 'team_communication_rating',
-        'He/She was able to delegate tasks effectively and ensure he/she were completed on time?': 'task_delegation_rating',
-        'He/She remained calm and collected under pressure during the event?': 'calmness_rating',
-        'He/She was able to adapt to unexpected challenges and changes before or during the Local CAF 2024?': 'adaptability_rating',
-        'He/She consistently displayed a positive and enthusiastic attitude throughout the Local CAF 2024?': 'attitude_rating',
-        'Do you think he/she face any difficulties with communication or collaboration during the event?': 'no_comm_collab_rating',
-        'In any external factors that threatened the success of the event, did he/she respond relatively?': 'external_resp_rating',
-        'He/She did not effectively manage his/her time during the event?': 'no_time_management_rating',
-        'He/She did not collaborate effectively with other CSG officers or committees?': 'no_collab_rating',
-        'He/She was not flexible in his/her approach to problem-solving during the Local CAF 2024?': 'no_flexible_rating',
-        'He/She did not take responsibility for his/her mistakes or the mistakes of his/her team?': 'no_accountability_rating',
-        'Please answer in ENGLISH: \nWhat do you think is his/her greatest contribution and what opportunity did he/she unlock during Local CAF 2024 event? (Please insert "N/A" if none)': 'event_contribution',
-        'Do you have any comment, suggestion/s, and recommendation/s?  (Please insert "N/A" if none)': 'comment_feedback'
-    }
+        data['message'] = f"Column rename completed. New column names are as follows: {df.columns}"
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
 
-    # Execute the rename using the dictionary
-    df = df.rename(columns=cols_to_rename)
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        # Drop unnecessary columns
+        # Set the columns to be dropped
+        columns_to_drop = ['timestamp','email','data_privacy']
+        data['message'] = f"Removing unneeded columns: {str(columns_to_drop)}"
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
 
-    data['message'] = f"Column rename completed. New column names are as follows: {df.columns}"
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        # Check if columns to drop are still in the data frame
+        existing_cols = df.columns.intersection(columns_to_drop)
 
-    # Drop unnecessary columns
-    # Set the columns to be dropped
-    columns_to_drop = ['timestamp','email','data_privacy']
-    data['message'] = f"Removing unneeded columns: {str(columns_to_drop)}"
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        # If columns to drop is still in the dataframe, drop it in the dataframe
+        # Else, show info of not found or already removed
+        if len(existing_cols) > 0:
+            df = df.drop(columns=existing_cols)
+            data['message'] = f"Unnecessary columns successfully removed"
+        else:
+            data['message'] = f"Failed to remove unnecessary columns"
+        
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        
+        data['message'] = f"Transforming the performance rating data in the dataset..."
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
 
-    # Check if columns to drop are still in the data frame
-    existing_cols = df.columns.intersection(columns_to_drop)
+        data['message'] = f"Transforming positive-rating columns..."
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        # Update those column with the right data
+        # For positive type of rating columns
+        positive_rating_value = {
+            'Strongly Agree': 5,
+            'Agree': 4,
+            'Neutral': 3,
+            'Disagree': 2,
+            'Strongly Disagree': 1
+        }
 
-    # If columns to drop is still in the dataframe, drop it in the dataframe
-    # Else, show info of not found or already removed
-    if len(existing_cols) > 0:
-        df = df.drop(columns=existing_cols)
-        data['message'] = f"Unnecessary columns successfully removed"
+        # Replace values of the column based on the positive rating value map
+        df['responsibility_rating'] = df['responsibility_rating'].replace(positive_rating_value)
+        df['team_communication_rating'] = df['team_communication_rating'].replace(positive_rating_value)
+        df['task_delegation_rating'] = df['task_delegation_rating'].replace(positive_rating_value)
+        df['calmness_rating'] = df['calmness_rating'].replace(positive_rating_value)
+        df['adaptability_rating'] = df['adaptability_rating'].replace(positive_rating_value)
+        df['attitude_rating'] = df['attitude_rating'].replace(positive_rating_value)
+        df['attitude_rating'] = df['attitude_rating'].replace(positive_rating_value)
+        df['external_resp_rating'] = df['external_resp_rating'].replace(positive_rating_value)
+
+        data['message'] = f"Transforming positive-rating columns completed"
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+
+        data['message'] = f"Transforming negative-rating columns..."
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        
+        # For negative type of rating columns
+        negative_rating_value = {
+            'Strongly Agree': 'Strongly Disagree',
+            'Agree': 'Disagree',
+            'Neutral': 'Neutral',
+            'Disagree': 'Agree',
+            'Strongly Disagree': "Strongly Agree"
+        }
+
+        # Replace values of the column based on the negative rating value map
+        df['no_comm_collab_rating'] = df['no_comm_collab_rating'].replace(negative_rating_value)
+        df['no_time_management_rating'] = df['no_time_management_rating'].replace(negative_rating_value)
+        df['no_collab_rating'] = df['no_collab_rating'].replace(negative_rating_value)
+        df['no_flexible_rating'] = df['no_flexible_rating'].replace(negative_rating_value)
+        df['no_accountability_rating'] = df['no_accountability_rating'].replace(negative_rating_value)
+
+        # Replace values of the column based on the positive rating value map
+        df['comm_collab_rating'] = df['no_comm_collab_rating'].replace(positive_rating_value)
+        df['time_management_rating'] = df['no_time_management_rating'].replace(positive_rating_value)
+        df['collab_rating'] = df['no_collab_rating'].replace(positive_rating_value)
+        df['flexible_rating'] = df['no_flexible_rating'].replace(positive_rating_value)
+        df['accountability_rating'] = df['no_accountability_rating'].replace(positive_rating_value)
+
+        # We need to remove the columns that are negatively-rated
+        negative_rated_cols = ["no_comm_collab_rating", "no_time_management_rating", "no_collab_rating", "no_flexible_rating", "no_accountability_rating"]
+        df = df.drop(columns=negative_rated_cols)
+
+        data['message'] = f"Transforming negative-rating columns completed"
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+
+        # data['message'] = f'{df.to_html(index=False, classes="table is-narrow")}'
+        # yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
     else:
-        data['message'] = f"Failed to remove unnecessary columns"
-    
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
-    
+        data['message'] = f"Fetching feedback.csv for training..."
+        yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        df = pd.read_csv('data/feedback.csv')
+
     data['message'] = f"Deduplicating data..."
     yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
     
@@ -135,68 +232,6 @@ def execute_train(csv_url):
         data['message'] = f"Duplicates removed"
     else:
         data['message'] = f"No duplicates removed"
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
-
-
-    data['message'] = f"Transforming the performance rating data in the dataset..."
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
-
-    data['message'] = f"Transforming positive-rating columns..."
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
-    # Update those column with the right data
-    # For positive type of rating columns
-    positive_rating_value = {
-        'Strongly Agree': 5,
-        'Agree': 4,
-        'Neutral': 3,
-        'Disagree': 2,
-        'Strongly Disagree': 1
-    }
-
-    # Replace values of the column based on the positive rating value map
-    df['responsibility_rating'] = df['responsibility_rating'].replace(positive_rating_value)
-    df['team_communication_rating'] = df['team_communication_rating'].replace(positive_rating_value)
-    df['task_delegation_rating'] = df['task_delegation_rating'].replace(positive_rating_value)
-    df['calmness_rating'] = df['calmness_rating'].replace(positive_rating_value)
-    df['adaptability_rating'] = df['adaptability_rating'].replace(positive_rating_value)
-    df['attitude_rating'] = df['attitude_rating'].replace(positive_rating_value)
-    df['attitude_rating'] = df['attitude_rating'].replace(positive_rating_value)
-    df['external_resp_rating'] = df['external_resp_rating'].replace(positive_rating_value)
-
-    data['message'] = f"Transforming positive-rating columns completed"
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
-
-    data['message'] = f"Transforming negative-rating columns..."
-    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
-    
-    # For negative type of rating columns
-    negative_rating_value = {
-        'Strongly Agree': 'Strongly Disagree',
-        'Agree': 'Disagree',
-        'Neutral': 'Neutral',
-        'Disagree': 'Agree',
-        'Strongly Disagree': "Strongly Agree"
-    }
-
-    # Replace values of the column based on the negative rating value map
-    df['no_comm_collab_rating'] = df['no_comm_collab_rating'].replace(negative_rating_value)
-    df['no_time_management_rating'] = df['no_time_management_rating'].replace(negative_rating_value)
-    df['no_collab_rating'] = df['no_collab_rating'].replace(negative_rating_value)
-    df['no_flexible_rating'] = df['no_flexible_rating'].replace(negative_rating_value)
-    df['no_accountability_rating'] = df['no_accountability_rating'].replace(negative_rating_value)
-
-    # Replace values of the column based on the positive rating value map
-    df['comm_collab_rating'] = df['no_comm_collab_rating'].replace(positive_rating_value)
-    df['time_management_rating'] = df['no_time_management_rating'].replace(positive_rating_value)
-    df['collab_rating'] = df['no_collab_rating'].replace(positive_rating_value)
-    df['flexible_rating'] = df['no_flexible_rating'].replace(positive_rating_value)
-    df['accountability_rating'] = df['no_accountability_rating'].replace(positive_rating_value)
-
-    # We need to remove the columns that are negatively-rated
-    negative_rated_cols = ["no_comm_collab_rating", "no_time_management_rating", "no_collab_rating", "no_flexible_rating", "no_accountability_rating"]
-    df = df.drop(columns=negative_rated_cols)
-
-    data['message'] = f"Transforming negative-rating columns completed"
     yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
 
     data['message'] = f"Transforming Comments and Feedback columns.."
@@ -235,11 +270,11 @@ def execute_train(csv_url):
     # Dropping rows with 'no review' values
     df = df[(df['comment_feedback'] != 'no review') & (df['event_contribution'] != 'no review')] 
 
-    data['message'] = f"Noise values removed."
+    data['message'] = f"Dropping rows with noise data (e.g. no review values)... COMPLETED"
     yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
 
 
-    data['message'] = f"Translating non-English words.."  
+    data['message'] = f"Translating non-English words.. (This might take a while)"  
     yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
     
     # Function to translate text
@@ -251,7 +286,7 @@ def execute_train(csv_url):
     df['new_comment_feedback'] = df['comment_feedback'].apply(translate_text)
     df['new_event_contribution'] = df['event_contribution'].apply(translate_text)
 
-    data['message'] = f"Translation completed."  
+    data['message'] = f"Translating non-English words.. COMPLETED"  
     yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
 
     data['message'] = f"Expanding contractions.."  
@@ -634,23 +669,16 @@ def execute_train(csv_url):
     # Selecting only the numerical columns in the dataset
     numericals = X_train.select_dtypes(include='number')
 
-    # Select all columns that are nominal in nature
-    categoricals = X_train.select_dtypes(include='object')
-
     # Instantiating the imputers
     mean_imputer = SimpleImputer(strategy='mean')
-    freq_imputer = SimpleImputer(strategy='most_frequent')
+
 
     # Fitting and transforming the numerical dataset
-
     # Create the standard scaler instance
     scaler = StandardScaler()
 
     # Fit the numerical columns
     scaler.fit(numericals)
-
-    # Tranform to scaled dataset
-    scaled_num_data = scaler.transform(numericals)
 
     num_pipeline = make_pipeline(mean_imputer, scaler)
     num_tuple = (num_pipeline, numericals.columns)
@@ -739,7 +767,7 @@ def execute_train(csv_url):
     # Setting all the parameters for tuning all of the models
 
     knn_param_grid = {
-        'kneighborsclassifier__n_neighbors': range(1,100),
+        'kneighborsclassifier__n_neighbors': range(1, 100),
         'kneighborsclassifier__leaf_size': range(1,30),
     }
 
@@ -773,13 +801,12 @@ def execute_train(csv_url):
         'XGBClassifier': xgbc_param_grid,
     }
 
-    
     # Initiate metrics list for output
     tuned_metrics_list = []
 
     # Hold the tuned models
     best_model_container = {}
-    # Initial modeling with default parameters
+
     for i, (m, model) in enumerate(models.items()):
         # Create the pipeline from transforming to the selected model
         model_pipe = make_pipeline(transformer, model)
@@ -843,10 +870,46 @@ def execute_train(csv_url):
     data['message'] = f"{df_tbl}"
     yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
 
-    df_tbl = df.head(2).to_html(index=False, max_cols=8, classes="table is-narrow")
-    data['message'] = f"{df_tbl}"
+    data['message'] = f"Determining Best Fit Models... "  
     yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
 
-    data['message'] = "Training completed"
+    models_to_be_created = []
+    now = datetime.now().strftime("%Y%m%d%H%M%S")
+    
+    for i, k in enumerate(tuned_metrics_list):
+        if abs(k['Testing F1 score'] - k['Training F1 score']) <= 0.02:
+            bm = (best_model_container, k['Model Used'], f"Tuned{k['Model Used']}_{now}.pkl")
+            models_to_be_created.append(bm)
+    
+    for i, k in enumerate(metrics_list):
+        if abs(k['Testing F1 score'] - k['Training F1 score']) <= 0.02:
+            bm = (model_container, k['Model Used'], f"Initial{k['Model Used']}_{now}.pkl")
+            models_to_be_created.append(bm)
+
+    data['message'] = f"Determined {len(models_to_be_created)} best fit models... "
+    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+
+    data['message'] = f"Pickling the models..."
+    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        
+    for container, key, filename in models_to_be_created:
+        # Create the absolute path of the model pickle files
+        model_pkl = "models/retrain/" + filename
+
+        # Create directory based on thge absolute path
+        os.makedirs(os.path.dirname(model_pkl), exist_ok=True)
+
+        # Create the pickled model
+        with open(model_pkl, 'wb') as file:
+            pickle.dump(container[key], file)
+            data['message'] = f'Saved {key} model in {model_pkl}'
+            yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+
+    data['message'] = f"Pickling the models... COMPLETED"
+    yield f"event: mlstep\ndata: {json.dumps(data)}\n\n"
+        
+    # df_tbl = pd.DataFrame(models_to_be_created).to_html(index=False, max_cols=8, classes="table is-narrow")
+
+    data['message'] = "Model Training completed"
     yield f"event: mlfinish\ndata: {json.dumps(data)}\n\n"
 

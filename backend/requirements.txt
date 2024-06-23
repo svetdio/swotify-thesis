@@ -8,4 +8,3 @@ pandasql==0.7.3
 deep_translator
 num2words
 emoji
-pattern

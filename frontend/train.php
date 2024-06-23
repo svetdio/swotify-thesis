@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-6.5.2-web/css/all.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+    <link href="https://cdn.jsdelivr.net/npm/busy-load/dist/app.min.css" rel="stylesheet">
 
 
     <style>
@@ -38,7 +39,7 @@
 <body>
     <nav class="navbar is-link" role="navigation" aria-label="main navigation">
 
-    <div id="navbarBasicExample" class="navbar-menu">
+        <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
                 <a href="index.php" class="navbar-item">Home</a>
                 <a href="dashboard.php" class="navbar-item">Analysis Dashboard</a>
@@ -49,7 +50,7 @@
 
             <div class="navbar-end">
                 <div class="navbar-item">
-                <a href="train.php" class="navbar-item is-selected">Trainer</a>
+                    <a href="train.php" class="navbar-item is-selected">Trainer</a>
                 </div>
             </div>
 
@@ -66,7 +67,7 @@
         <div class="container is-fluid">
             <div class="columns">
                 <div class="column is-3">
-                    <div class="box m-1">
+                    <div id="train-form" class="box m-1">
                         <div class="field">
                             <label class="label">CSV File Source URL</label>
                             <div class="control has-icons-left has-icons-right">
@@ -103,6 +104,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/busy-load/dist/app.min.js"></script>
     <script src="train.js"></script>
 
 </body>
